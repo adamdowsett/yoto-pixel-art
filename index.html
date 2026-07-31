@@ -1,0 +1,1801 @@
+<title>Yoto Pixel Art — 16×16</title>
+<meta name="description" content="Paint 16×16 pixel icons and export them as PNG for Yoto MYO cards.">
+<style>
+  @font-face {
+    font-family: 'IconEditorMono';
+    src: local('SFMono-Regular'), local('Menlo'), local('Consolas');
+  }
+
+  :root {
+    --bg: #14161b;
+    --surface: #1c1f26;
+    --surface-2: #262a33;
+    --border: #333844;
+    --text: #eef1f5;
+    --muted: #8891a0;
+    --accent: #ff6b4a;
+    --accent-ink: #2a0f08;
+    --accent-2: #63d2ff;
+    --grid-line: #3a3f4b;
+    --checker-a: #23262e;
+    --checker-b: #2c303a;
+    --focus: #63d2ff;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #eef0f0;
+      --surface: #ffffff;
+      --surface-2: #f4f5f6;
+      --border: #d7dadf;
+      --text: #1b1e24;
+      --muted: #666f7d;
+      --accent: #e8563a;
+      --accent-ink: #ffffff;
+      --accent-2: #0080a8;
+      --grid-line: #d2d5db;
+      --checker-a: #eceef0;
+      --checker-b: #dfe2e6;
+      --focus: #0080a8;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #14161b;
+    --surface: #1c1f26;
+    --surface-2: #262a33;
+    --border: #333844;
+    --text: #eef1f5;
+    --muted: #8891a0;
+    --accent: #ff6b4a;
+    --accent-ink: #2a0f08;
+    --accent-2: #63d2ff;
+    --grid-line: #3a3f4b;
+    --checker-a: #23262e;
+    --checker-b: #2c303a;
+    --focus: #63d2ff;
+  }
+
+  :root[data-theme="light"] {
+    --bg: #eef0f0;
+    --surface: #ffffff;
+    --surface-2: #f4f5f6;
+    --border: #d7dadf;
+    --text: #1b1e24;
+    --muted: #666f7d;
+    --accent: #e8563a;
+    --accent-ink: #ffffff;
+    --accent-2: #0080a8;
+    --grid-line: #d2d5db;
+    --checker-a: #eceef0;
+    --checker-b: #dfe2e6;
+    --focus: #0080a8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI Rounded", "Segoe UI", ui-rounded, system-ui, sans-serif;
+    padding: clamp(16px, 4vw, 40px);
+  }
+
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--bg);
+    padding-top: 4px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    transition: padding 160ms ease;
+  }
+
+  header.compact {
+    padding-top: 2px;
+    padding-bottom: 4px;
+  }
+  header.compact h1 {
+    font-size: 16px;
+  }
+  header.compact .help-btn {
+    height: 24px;
+    font-size: 11px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    header, header h1, header .help-btn { transition: none !important; }
+  }
+
+  .eyebrow {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  h1 {
+    font-size: clamp(20px, 3.4vw, 28px);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin: 2px 0;
+    text-wrap: balance;
+    transition: font-size 160ms ease;
+  }
+
+  .sub {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 60ch;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .title-row > .title-block {
+    min-width: 0;
+  }
+
+  .help-btn {
+    flex: none;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 8px;
+    justify-content: center;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1;
+    transition: height 160ms ease, font-size 160ms ease;
+  }
+  .help-btn[aria-expanded="true"] {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+  }
+
+  .version-badge {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 0 10px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .changelog-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
+
+  .changelog-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  .changelog-list li {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .changelog-list .v {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-weight: 700;
+    color: var(--text);
+    margin-right: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .help-panel {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .help-panel[hidden] { display: none; }
+
+  .board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 20px;
+    align-items: start;
+  }
+
+  @media (max-width: 760px) {
+    body { padding: 10px 12px clamp(16px, 4vw, 40px); }
+    .canvas-panel { gap: 10px; }
+    .panel { padding: 12px; }
+    .board { grid-template-columns: 1fr; }
+    #gridWrap canvas#grid { width: 100%; height: auto; max-width: 380px; }
+    .toolbar { gap: 4px; justify-content: space-between; }
+    .toolbar button { padding: 0; width: 38px; height: 38px; justify-content: center; flex: none; }
+    .toolbar .btn-label { display: none; }
+    .toolbar .btn-icon { font-size: 15px; }
+    .swatch { min-height: 30px; }
+    button, input[type="text"] { min-height: 40px; }
+    input[type="color"] { width: 40px; height: 40px; }
+    .side { order: 2; }
+
+    /* the mobile tray replaces the inline colour panel to save space */
+    .side .colour-section { display: none; }
+    .wrap { padding-bottom: 84px; } /* clear the fixed tray */
+  }
+
+  @media (max-width: 420px) {
+    body { padding: 12px; }
+    .panel { padding: 12px; }
+  }
+
+  /* --- mobile colour tray --- */
+  .mobile-tray {
+    display: none;
+  }
+
+  @media (max-width: 760px) {
+    .mobile-tray {
+      display: block;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-radius: 14px 14px 0 0;
+      box-shadow: 0 -10px 24px -14px rgb(0 0 0 / 0.5);
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tray-handle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border: none;
+      background: none;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      border-radius: 0;
+    }
+
+    .tray-current-wrap {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      flex: none;
+      background-image:
+        linear-gradient(45deg, var(--checker-a) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--checker-a) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--checker-a) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--checker-a) 75%);
+      background-size: 8px 8px;
+      background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+      background-color: var(--checker-b);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .tray-current { display: block; width: 100%; height: 100%; }
+
+    .tray-label { flex: 1; text-align: left; }
+
+    .tray-chevron {
+      font-size: 11px;
+      color: var(--muted);
+      transition: transform 160ms ease;
+    }
+    .mobile-tray.expanded .tray-chevron { transform: rotate(180deg); }
+
+    .tray-quick {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px 16px;
+      min-height: 54px;
+      overflow-x: auto;
+      overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tray-quick .swatch,
+    .tray-quick input[type="color"] {
+      flex: none;
+      width: 36px;
+      height: 36px;
+    }
+    .tray-sep {
+      flex: none;
+      width: 1px;
+      height: 32px;
+      background: var(--border);
+      margin: 0 2px;
+    }
+    .tray-quick .swatch.recent-slot.empty {
+      border-style: dashed;
+      border-color: var(--border);
+      background: none !important;
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .tray-full {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 200ms ease;
+      padding: 0 14px;
+    }
+    .mobile-tray.expanded .tray-full {
+      max-height: 60vh;
+      overflow-y: auto;
+      padding-bottom: 16px;
+    }
+    .tray-full .palette {
+      grid-template-columns: repeat(7, 1fr);
+      margin-bottom: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tray-chevron, .tray-full { transition: none !important; }
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .canvas-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .toolbar {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px; /* room for scrollbar without clipping focus rings */
+  }
+
+  .toolbar button {
+    flex: none;
+    white-space: nowrap;
+  }
+
+  button.icon-only {
+    width: 34px;
+    padding: 0;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .btn-icon { display: inline-flex; }
+  .btn-label { display: inline; }
+
+  button {
+    font: inherit;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    border-radius: 7px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 120ms ease, transform 80ms ease;
+  }
+
+  button:hover { border-color: var(--accent-2); }
+  button:active { transform: translateY(1px); }
+  button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  button.tool-active {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 16%, var(--surface-2));
+  }
+
+  /* selection state is already shown via .tool-active — keep these three
+     inert after a click instead of layering a focus ring on top */
+  #toolPencil:focus-visible,
+  #toolFill:focus-visible,
+  #toolEraser:focus-visible {
+    outline: none;
+  }
+
+  button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  button:disabled:hover { border-color: var(--border); }
+
+  button.confirm-armed {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  #gridWrap {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 30px -18px rgb(0 0 0 / 0.6);
+    touch-action: none;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  #grid {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    cursor: crosshair;
+    touch-action: none;
+  }
+
+  #overlayImg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: none;
+    pointer-events: none;
+    opacity: 0.5;
+    display: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none;
+  }
+
+  #overlayImg.visible { display: block; }
+  #overlayImg.unlocked { pointer-events: auto; cursor: grab; }
+  #overlayImg.dragging { cursor: grabbing; }
+
+  .overlay-hint {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    color: #fff;
+    background: rgb(0 0 0 / 0.55);
+    padding: 3px 7px;
+    border-radius: 5px;
+    pointer-events: none;
+    display: none;
+  }
+  .overlay-hint.show { display: block; }
+
+  .no-tool-hint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.96);
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    backdrop-filter: blur(2px);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 10px;
+    box-shadow: 0 10px 26px -12px rgb(0 0 0 / 0.5);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 160ms ease, transform 160ms ease;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .no-tool-hint.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .no-tool-hint { transition: opacity 1ms linear !important; transform: translate(-50%, -50%) !important; }
+  }
+
+  .session-toast {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%, -6px);
+    background: color-mix(in srgb, var(--accent-2) 16%, var(--surface));
+    border: 1px solid var(--accent-2);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px -10px rgb(0 0 0 / 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease, transform 200ms ease;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .session-toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .session-toast { transition: opacity 1ms linear !important; transform: translate(-50%, 0) !important; }
+  }
+
+  .trace-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .trace-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .trace-row button { padding: 6px 9px; font-size: 12px; }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    border: 2px solid var(--surface);
+    cursor: pointer;
+    margin-top: -6px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    border: 2px solid var(--surface);
+    cursor: pointer;
+  }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+
+  .file-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  #overlayFile { display: none; }
+
+  .canvas-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .canvas-meta-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .scroll-tools-btn {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-2);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 4px 8px;
+  }
+  .scroll-tools-btn:hover { border-color: var(--accent-2); }
+
+  #exportPanel { scroll-margin-top: 96px; }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .side h2 {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 10px;
+  }
+
+  .current-color {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .swatch-big {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    flex: none;
+    background-image:
+      linear-gradient(45deg, var(--checker-a) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--checker-a) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--checker-a) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--checker-a) 75%);
+    background-size: 10px 10px;
+    background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+    background-color: var(--checker-b);
+  }
+
+  .swatch-big > span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 7px;
+  }
+
+  .current-color .label {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .current-color .hex {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+  }
+
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .swatch {
+    aspect-ratio: 1;
+    border-radius: 5px;
+    border: 1px solid rgb(0 0 0 / 0.15);
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+  }
+
+  .swatch:hover { transform: scale(1.08); }
+  .swatch.selected {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .custom-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  input[type="color"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    flex: none;
+  }
+  input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+  input[type="color"]::-webkit-color-swatch { border-radius: 5px; border: none; }
+
+  .custom-row label {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  hr.rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 14px 0;
+  }
+
+  .export-btn {
+    width: 100%;
+    justify-content: center;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: transparent;
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+  .export-btn:hover { filter: brightness(1.05); border-color: transparent; }
+
+  .filename-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .filename-row input[type="text"] {
+    font: inherit;
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 7px;
+    padding: 7px 9px;
+  }
+  .filename-row input[type="text"]:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+
+  .preview-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #preview1x {
+    width: 48px;
+    height: 48px;
+    image-rendering: pixelated;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background-image:
+      linear-gradient(45deg, var(--checker-a) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--checker-a) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--checker-a) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--checker-a) 75%);
+    background-size: 8px 8px;
+    background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+    background-color: var(--checker-b);
+  }
+
+  .preview-row .cap {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  footer {
+    margin-top: 22px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  footer code {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 11px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+
+  .critter-footer {
+    display: flex;
+    justify-content: center;
+    gap: 34px;
+    margin-top: min(42vh, 320px);
+    padding-bottom: 24px;
+  }
+
+  .critter {
+    font-size: 20px;
+    /* each critter dances inside its own fixed-size box — the box is what
+       keeps neighbours from ever overlapping, not the animation amplitude */
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.75;
+    transition: opacity 160ms ease;
+  }
+
+  .critter:hover { opacity: 1; }
+
+  .critter-footer.dancing .critter { animation: critter-dance 1.7s ease-in-out infinite; }
+  .critter-footer.dancing .critter:nth-child(1) { animation-duration: 1.5s; animation-delay: 0s; }
+  .critter-footer.dancing .critter:nth-child(2) { animation-duration: 1.9s; animation-delay: 0.15s; }
+  .critter-footer.dancing .critter:nth-child(3) { animation-duration: 1.6s; animation-delay: 0.3s; }
+  .critter-footer.dancing .critter:nth-child(4) { animation-duration: 2.1s; animation-delay: 0.45s; }
+
+  @keyframes critter-dance {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    25%  { transform: translate(2px, -5px) rotate(-8deg); }
+    50%  { transform: translate(-2px, -2px) rotate(5deg); }
+    75%  { transform: translate(-3px, -6px) rotate(-4deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .critter { transition: opacity 1ms linear !important; }
+    .critter-footer.dancing .critter { animation: none !important; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <div class="title-block">
+        <h1>Yoto Pixel Art</h1>
+      </div>
+      <div class="header-actions">
+        <button type="button" id="themeToggle" class="help-btn" title="Toggle light/dark" aria-label="Toggle light/dark theme">◐</button>
+        <button type="button" id="changelogBtn" class="help-btn version-badge" aria-expanded="false" aria-controls="changelogPanel" title="What's new">v1.13</button>
+        <button type="button" id="helpBtn" class="help-btn" aria-expanded="false" aria-controls="helpPanel" title="How this works">?</button>
+      </div>
+    </div>
+    <div class="help-panel" id="helpPanel" hidden>
+      <p class="sub">Click a colour, then click a pixel to paint it. Yoto doesn't enforce a fixed
+        palette technically — any PNG works — but a small, high-contrast palette reads best at
+        16 pixels. Export when it looks right at 1×.</p>
+    </div>
+    <div class="help-panel" id="changelogPanel" hidden>
+      <h2 class="changelog-title">Changelog</h2>
+      <ul class="changelog-list">
+        <li><span class="v">v1.13</span> Removed the technical footer text. Header subtitle removed, sticky header shrinks on scroll, layout tightened to fit one screen on load.</li>
+        <li><span class="v">v1.12</span> Auto-saves to this browser as you draw; a refresh silently restores it with a dismissible "Session restored" toast.</li>
+        <li><span class="v">v1.11</span> Eraser icon redrawn as a pencil-top eraser instead of a sponge.</li>
+        <li><span class="v">v1.10</span> Picking a colour no longer bumps an active Fill/Eraser back to Pencil.</li>
+        <li><span class="v">v1.9</span> Clicking anywhere else disarms an armed Clear button — the next click always re-confirms.</li>
+        <li><span class="v">v1.8</span> No tool selected on load (scroll-safe); tools toggle off; "try the Pencil" hint; confirmed Clear also wipes undo/redo history.</li>
+        <li><span class="v">v1.7</span> Light/dark toggle (follows device by default); curated tray palette incl. white; 3 recent-colour slots; fixed swatch cropping; flagged that pure black doesn't render on the Yoto screen.</li>
+        <li><span class="v">v1.6</span> Full icon-only toolbar so all six buttons actually fit on one mobile row.</li>
+        <li><span class="v">v1.5</span> Icon-only Undo/Redo to keep the toolbar on one line.</li>
+        <li><span class="v">v1.4</span> Fixed Save/Export (real download capability); help text collapses behind "?"; mobile colour tray.</li>
+        <li><span class="v">v1.3</span> Arm-to-confirm Clear button; 10-step undo/redo.</li>
+        <li><span class="v">v1.2</span> Save/Load progress as JSON; mobile-responsive layout.</li>
+        <li><span class="v">v1.1</span> Trace overlay: load a reference photo, pan/zoom, lock/unlock, show/hide.</li>
+        <li><span class="v">v1.0</span> Initial release: 16×16 canvas, palette + custom colour, pencil/fill/eraser, PNG export.</li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="board">
+    <section class="panel canvas-panel">
+      <div class="toolbar">
+        <button id="toolPencil" type="button" title="Pencil — tap again to turn off" aria-label="Pencil"><span class="btn-icon">✏️</span><span class="btn-label">Pencil</span></button>
+        <button id="toolFill" type="button" title="Fill" aria-label="Fill"><span class="btn-icon">🪣</span><span class="btn-label">Fill</span></button>
+        <button id="toolEraser" type="button" title="Eraser" aria-label="Eraser"><span class="btn-icon btn-icon-eraser"><svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><g transform="rotate(-28 12 12)"><rect x="6" y="4" width="12" height="16" rx="3" fill="#ff8fab" stroke="#c9184a" stroke-width="1.2"/><rect x="6" y="4" width="12" height="5.5" rx="2" fill="#e3e7ec" stroke="#8891a0" stroke-width="1.2"/></g></svg></span><span class="btn-label">Eraser</span></button>
+        <button id="undoBtn" type="button" class="icon-only" disabled title="Undo" aria-label="Undo">↶</button>
+        <button id="redoBtn" type="button" class="icon-only" disabled title="Redo" aria-label="Redo">↷</button>
+        <button id="clearAll" type="button" title="Clear canvas" aria-label="Clear canvas"><span class="btn-icon">🗑</span><span class="btn-label">Clear</span></button>
+      </div>
+      <div id="gridWrap">
+        <canvas id="grid" width="480" height="480" aria-label="16 by 16 pixel drawing grid"></canvas>
+        <img id="overlayImg" alt="Reference image to trace">
+        <div class="overlay-hint" id="overlayHint">drag to position · scroll to zoom</div>
+        <div class="no-tool-hint" id="noToolHint">👆 Try clicking the <strong>Pencil</strong> tool</div>
+        <div class="session-toast" id="sessionToast">✓ Session restored</div>
+      </div>
+      <div class="canvas-meta">
+        <span id="hoverCoord">—</span>
+        <span class="canvas-meta-right">
+          <span id="canvasHint">16×16 px canvas</span>
+          <button type="button" id="scrollToolsBtn" class="scroll-tools-btn" title="Jump to export &amp; save tools">More tools ↓</button>
+        </span>
+      </div>
+    </section>
+
+    <aside class="panel side">
+      <div>
+        <h2>Trace overlay</h2>
+        <div class="trace-controls">
+          <input type="file" id="overlayFile" accept="image/*">
+          <button type="button" class="file-btn" id="overlayFileBtn">🖼 Choose reference image</button>
+          <div class="trace-row" id="overlayActions" style="display:none;">
+            <button type="button" id="overlayToggleShow">👁 Hide</button>
+            <button type="button" id="overlayToggleLock">🔓 Unlocked</button>
+            <button type="button" id="overlayReset">Reset</button>
+          </div>
+          <div id="overlaySliders" style="display:none;">
+            <div class="slider-label"><span>Zoom</span><span id="zoomVal">100%</span></div>
+            <input type="range" id="zoomSlider" min="10" max="400" value="100">
+            <div class="slider-label" style="margin-top:8px;"><span>Opacity</span><span id="opacityVal">50%</span></div>
+            <input type="range" id="opacitySlider" min="5" max="100" value="50">
+          </div>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <div class="colour-section">
+        <h2>Colour</h2>
+        <div class="current-color">
+          <span class="swatch-big"><span id="currentSwatch"></span></span>
+          <div>
+            <div class="label">Selected</div>
+            <div class="hex" id="currentHex">#FF6B4A</div>
+          </div>
+        </div>
+        <div class="palette" id="palette"></div>
+        <div class="custom-row">
+          <input type="color" id="customColor" value="#ff6b4a" aria-label="Custom colour picker">
+          <label for="customColor">Custom colour</label>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <div id="exportPanel">
+        <h2>Export</h2>
+        <div class="filename-row">
+          <label for="filename" style="font-size:12px;color:var(--muted);">File name</label>
+          <input type="text" id="filename" value="magpie-icon" spellcheck="false">
+        </div>
+        <div class="preview-row" style="margin-bottom:12px;">
+          <canvas id="preview1x" width="16" height="16"></canvas>
+          <div class="cap">True size (16×16), exactly as it'll<br>appear on the player.</div>
+        </div>
+        <button class="export-btn" id="exportBtn" type="button">⬇ Export PNG</button>
+      </div>
+
+      <hr class="rule">
+
+      <div>
+        <h2>Progress</h2>
+        <div class="trace-row" style="margin-bottom:8px;">
+          <button type="button" id="saveStateBtn">💾 Save</button>
+          <button type="button" id="loadStateBtn">📂 Load</button>
+          <input type="file" id="loadStateFile" accept="application/json" style="display:none;">
+        </div>
+        <div class="cap" style="font-size:11px;color:var(--muted);line-height:1.5;">
+          Saves a <code>.json</code> file with the full pixel grid — not just the flattened PNG,
+          so you can reopen and keep editing. Load re-opens a previously saved file.
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="critter-footer" aria-hidden="true">
+    <span class="critter">🐸</span>
+    <span class="critter">🦀</span>
+    <span class="critter">🐤</span>
+    <span class="critter">🐱</span>
+  </footer>
+</div>
+
+<div class="mobile-tray" id="mobileTray">
+  <button type="button" class="tray-handle" id="trayHandle" aria-expanded="false" aria-controls="trayFull">
+    <span class="tray-current-wrap"><span id="trayCurrentSwatch" class="tray-current"></span></span>
+    <span class="tray-label">Colours</span>
+    <span class="tray-chevron" id="trayChevron">▲</span>
+  </button>
+  <div class="tray-quick" id="trayQuick"></div>
+  <div class="tray-full" id="trayFull"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SIZE = 16;
+  var CELL = 480 / SIZE; // 30px on-screen per pixel
+
+  var PALETTE = [
+    "#000000", "#3a3f4b", "#8891a0", "#ffffff",
+    "#ff6b4a", "#e8563a", "#ffb703", "#ffe066",
+    "#63d2ff", "#0080a8", "#1b6fb8", "#0b3d66",
+    "#3ddc97", "#1f9c6b", "#0c5c3f", "#8bd450",
+    "#c77dff", "#7b2cbf", "#ff5d8f", "#c9184a",
+    "#a6774e", "#5c3a21", "#f2e5d0", "#d9d2c5"
+  ];
+
+  // Pure black (#000000) doesn't render on the Yoto player's screen — Yoto's
+  // own icon guidance says to avoid it (some MYO icon-makers exploit this
+  // deliberately for "floating" negative-space icons, so it stays in the
+  // full palette, just flagged and left out of the quick tray/defaults).
+  var YOTO_INVISIBLE_BLACK = "#000000";
+
+  // Curated, high-contrast quick-access set for the mobile tray — always
+  // includes white, deliberately excludes pure black.
+  var TRAY_QUICK = [
+    "#ffffff", "#ff6b4a", "#ffe066", "#63d2ff",
+    "#3ddc97", "#c77dff", "#ffb703"
+  ];
+
+  var canvas = document.getElementById("grid");
+  var ctx = canvas.getContext("2d");
+  var preview = document.getElementById("preview1x");
+  var pctx = preview.getContext("2d");
+
+  // pixel data: SIZE*SIZE entries, each either null (transparent) or "#rrggbb"
+  var pixels = new Array(SIZE * SIZE).fill(null);
+
+  var currentColor = "#ff6b4a";
+  var currentTool = null; // null (no tool — safe to scroll) | pencil | fill | eraser
+  var isPointerDown = false;
+
+  var currentSwatch = document.getElementById("currentSwatch");
+  var currentHex = document.getElementById("currentHex");
+
+  function setCurrentColor(hex) {
+    currentColor = hex;
+    currentSwatch.style.background = hex;
+    currentHex.textContent = hex.toUpperCase();
+    document.getElementById("trayCurrentSwatch").style.background = hex;
+    document.querySelectorAll(".swatch").forEach(function (el) {
+      el.classList.toggle("selected", el.dataset.hex === hex);
+    });
+    if (typeof noteRecentColor === "function") noteRecentColor(hex);
+  }
+
+  function buildSwatches(containerId, colors) {
+    var wrap = document.getElementById(containerId);
+    colors.forEach(function (hex) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "swatch";
+      b.style.background = hex;
+      b.dataset.hex = hex;
+      b.title = (hex === YOTO_INVISIBLE_BLACK) ? hex + " — invisible on the Yoto screen" : hex;
+      b.addEventListener("click", function () {
+        setCurrentColor(hex);
+        if (!currentTool) setTool("pencil"); // only default to pencil if nothing's selected — don't steal Fill/Eraser
+        var tray = document.getElementById("mobileTray");
+        if (tray.contains(b) && tray.classList.contains("expanded")) {
+          tray.classList.remove("expanded");
+          document.getElementById("trayHandle").setAttribute("aria-expanded", "false");
+        }
+      });
+      wrap.appendChild(b);
+    });
+  }
+
+  // --- recently used colours: last 3, excluding anything already in TRAY_QUICK ---
+  var RECENT_LIMIT = 3;
+  var recentColors = [];
+  var recentSlotEls = [];
+
+  function updateRecentSlots() {
+    for (var i = 0; i < RECENT_LIMIT; i++) {
+      var el = recentSlotEls[i];
+      var hex = recentColors[i];
+      if (hex) {
+        el.style.background = hex;
+        el.dataset.hex = hex;
+        el.title = hex;
+        el.classList.remove("empty");
+        el.disabled = false;
+      } else {
+        el.style.background = "";
+        delete el.dataset.hex;
+        el.title = "No recent colour yet";
+        el.classList.add("empty");
+        el.disabled = true;
+      }
+    }
+  }
+
+  function noteRecentColor(hex) {
+    if (TRAY_QUICK.indexOf(hex) !== -1) return; // already a quick-tray swatch, don't duplicate
+    var i = recentColors.indexOf(hex);
+    if (i !== -1) recentColors.splice(i, 1);
+    recentColors.unshift(hex);
+    if (recentColors.length > RECENT_LIMIT) recentColors.length = RECENT_LIMIT;
+    updateRecentSlots();
+  }
+
+  function buildPalette() {
+    buildSwatches("palette", PALETTE);
+    buildSwatches("trayQuick", TRAY_QUICK);
+
+    var sep = document.createElement("span");
+    sep.className = "tray-sep";
+    sep.setAttribute("aria-hidden", "true");
+    document.getElementById("trayQuick").appendChild(sep);
+
+    for (var i = 0; i < RECENT_LIMIT; i++) {
+      var slot = document.createElement("button");
+      slot.type = "button";
+      slot.className = "swatch recent-slot empty";
+      slot.disabled = true;
+      slot.title = "No recent colour yet";
+      slot.addEventListener("click", function () {
+        if (this.dataset.hex) {
+          setCurrentColor(this.dataset.hex);
+          if (!currentTool) setTool("pencil");
+        }
+      });
+      document.getElementById("trayQuick").appendChild(slot);
+      recentSlotEls.push(slot);
+    }
+
+    var trayCustom = document.createElement("input");
+    trayCustom.type = "color";
+    trayCustom.value = currentColor;
+    trayCustom.setAttribute("aria-label", "Custom colour");
+    trayCustom.addEventListener("input", function (e) {
+      setCurrentColor(e.target.value);
+      if (!currentTool) setTool("pencil");
+      document.getElementById("customColor").value = e.target.value;
+    });
+    document.getElementById("trayQuick").appendChild(trayCustom);
+
+    var full = document.createElement("div");
+    full.className = "palette";
+    full.id = "trayFullGrid";
+    document.getElementById("trayFull").appendChild(full);
+    buildSwatches("trayFullGrid", PALETTE);
+  }
+
+  document.getElementById("trayHandle").addEventListener("click", function () {
+    var tray = document.getElementById("mobileTray");
+    var expanded = tray.classList.toggle("expanded");
+    this.setAttribute("aria-expanded", expanded ? "true" : "false");
+  });
+
+  function setTool(tool) {
+    currentTool = tool; // pass null to deselect every tool (safe-to-scroll state)
+    document.getElementById("toolPencil").classList.toggle("tool-active", tool === "pencil");
+    document.getElementById("toolFill").classList.toggle("tool-active", tool === "fill");
+    document.getElementById("toolEraser").classList.toggle("tool-active", tool === "eraser");
+    if (tool) noToolHint.classList.remove("show");
+  }
+
+  function toggleTool(tool) {
+    setTool(currentTool === tool ? null : tool);
+  }
+
+  function idx(x, y) { return y * SIZE + x; }
+
+  function drawChecker() {
+    var a = getComputedStyle(document.documentElement).getPropertyValue("--checker-a").trim();
+    var b = getComputedStyle(document.documentElement).getPropertyValue("--checker-b").trim();
+    var cell = CELL;
+    for (var y = 0; y < SIZE; y++) {
+      for (var x = 0; x < SIZE; x++) {
+        ctx.fillStyle = ((x + y) % 2 === 0) ? a : b;
+        ctx.fillRect(x * cell, y * cell, cell, cell);
+      }
+    }
+  }
+
+  // --- local session persistence: survives a refresh, not a fresh device/browser ---
+  var SESSION_KEY = "pixel-icon-editor-session";
+  var autoSaveTimer = null;
+
+  function saveSession() {
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        size: SIZE,
+        pixels: pixels,
+        filename: document.getElementById("filename").value
+      }));
+    } catch (e) { /* storage unavailable/full — silently skip, manual Save still works */ }
+  }
+
+  function scheduleAutoSave() {
+    if (autoSaveTimer) clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(saveSession, 400);
+  }
+
+  var sessionToast = document.getElementById("sessionToast");
+  var sessionToastTimer = null;
+
+  function showSessionToast() {
+    sessionToast.classList.add("show");
+    sessionToastTimer = setTimeout(hideSessionToast, 2200);
+  }
+  function hideSessionToast() {
+    sessionToast.classList.remove("show");
+    if (sessionToastTimer) { clearTimeout(sessionToastTimer); sessionToastTimer = null; }
+  }
+  sessionToast.addEventListener("click", hideSessionToast);
+
+  function render() {
+    scheduleAutoSave();
+    drawChecker();
+    var cell = CELL;
+    for (var y = 0; y < SIZE; y++) {
+      for (var x = 0; x < SIZE; x++) {
+        var c = pixels[idx(x, y)];
+        if (c) {
+          ctx.fillStyle = c;
+          ctx.fillRect(x * cell, y * cell, cell, cell);
+        }
+      }
+    }
+    // grid lines
+    var line = getComputedStyle(document.documentElement).getPropertyValue("--grid-line").trim();
+    ctx.strokeStyle = line;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (var i = 0; i <= SIZE; i++) {
+      var p = i * cell + 0.5;
+      ctx.moveTo(p, 0); ctx.lineTo(p, SIZE * cell);
+      ctx.moveTo(0, p); ctx.lineTo(SIZE * cell, p);
+    }
+    ctx.stroke();
+
+    renderPreview();
+  }
+
+  function renderPreview() {
+    var img = pctx.createImageData(SIZE, SIZE);
+    for (var y = 0; y < SIZE; y++) {
+      for (var x = 0; x < SIZE; x++) {
+        var c = pixels[idx(x, y)];
+        var o = idx(x, y) * 4;
+        if (c) {
+          var rgb = hexToRgb(c);
+          img.data[o] = rgb.r; img.data[o + 1] = rgb.g; img.data[o + 2] = rgb.b; img.data[o + 3] = 255;
+        } else {
+          img.data[o] = 0; img.data[o + 1] = 0; img.data[o + 2] = 0; img.data[o + 3] = 0;
+        }
+      }
+    }
+    pctx.clearRect(0, 0, SIZE, SIZE);
+    pctx.putImageData(img, 0, 0);
+  }
+
+  function hexToRgb(hex) {
+    var h = hex.replace("#", "");
+    if (h.length === 3) h = h.split("").map(function (c) { return c + c; }).join("");
+    var num = parseInt(h, 16);
+    return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+  }
+
+  function floodFill(x0, y0, targetColor, fillColor) {
+    if (targetColor === fillColor) return;
+    var stack = [[x0, y0]];
+    var seen = new Set();
+    while (stack.length) {
+      var pt = stack.pop();
+      var x = pt[0], y = pt[1];
+      if (x < 0 || y < 0 || x >= SIZE || y >= SIZE) continue;
+      var key = x + "," + y;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      var i = idx(x, y);
+      if (pixels[i] !== targetColor) continue;
+      pixels[i] = fillColor;
+      stack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+    }
+  }
+
+  var noToolHint = document.getElementById("noToolHint");
+  var noToolHintTimer = null;
+
+  function flashNoToolHint() {
+    noToolHint.classList.add("show");
+    if (noToolHintTimer) clearTimeout(noToolHintTimer);
+    noToolHintTimer = setTimeout(function () { noToolHint.classList.remove("show"); }, 2200);
+  }
+
+  function paintAt(clientX, clientY) {
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+    var cx = (clientX - rect.left) * scaleX;
+    var cy = (clientY - rect.top) * scaleY;
+    var x = Math.floor(cx / CELL);
+    var y = Math.floor(cy / CELL);
+    if (x < 0 || y < 0 || x >= SIZE || y >= SIZE) return;
+
+    document.getElementById("hoverCoord").textContent = "x:" + x + "  y:" + y;
+
+    if (currentTool === "pencil") {
+      pixels[idx(x, y)] = currentColor;
+    } else if (currentTool === "eraser") {
+      pixels[idx(x, y)] = null;
+    } else if (currentTool === "fill") {
+      floodFill(x, y, pixels[idx(x, y)], currentColor);
+    }
+    render();
+  }
+
+  // --- trace overlay state ---
+  var overlay = document.getElementById("overlayImg");
+  var overlayHint = document.getElementById("overlayHint");
+  var overlayVisible = false;
+  var overlayLocked = false; // false = positioning mode (drag/zoom active, painting disabled)
+  var ov = { x: 0, y: 0, scale: 1 };
+  var ovDrag = null;
+
+  function paintingBlocked() {
+    return overlayVisible && !overlayLocked;
+  }
+
+  function applyOverlayTransform() {
+    overlay.style.transform =
+      "translate(-50%, -50%) translate(" + ov.x + "px, " + ov.y + "px) scale(" + ov.scale + ")";
+  }
+
+  document.getElementById("overlayFileBtn").addEventListener("click", function () {
+    document.getElementById("overlayFile").click();
+  });
+
+  document.getElementById("overlayFile").addEventListener("change", function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      overlay.src = ev.target.result;
+      ov = { x: 0, y: 0, scale: 1 };
+      applyOverlayTransform();
+      overlayVisible = true;
+      overlayLocked = false;
+      overlay.classList.add("visible", "unlocked");
+      overlay.classList.remove("dragging");
+      overlayHint.classList.add("show");
+      document.getElementById("overlayActions").style.display = "flex";
+      document.getElementById("overlaySliders").style.display = "block";
+      document.getElementById("overlayToggleShow").textContent = "👁 Hide";
+      document.getElementById("overlayToggleLock").textContent = "🔓 Unlocked";
+      document.getElementById("canvasHint").textContent = "positioning overlay — lock to resume painting";
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById("overlayToggleShow").addEventListener("click", function () {
+    overlayVisible = !overlayVisible;
+    overlay.classList.toggle("visible", overlayVisible);
+    overlayHint.classList.toggle("show", overlayVisible && !overlayLocked);
+    this.textContent = overlayVisible ? "👁 Hide" : "🚫 Show";
+    document.getElementById("canvasHint").textContent = paintingBlocked()
+      ? "positioning overlay — lock to resume painting" : "16×16 px canvas";
+  });
+
+  document.getElementById("overlayToggleLock").addEventListener("click", function () {
+    overlayLocked = !overlayLocked;
+    overlay.classList.toggle("unlocked", !overlayLocked);
+    overlayHint.classList.toggle("show", overlayVisible && !overlayLocked);
+    this.textContent = overlayLocked ? "🔒 Locked" : "🔓 Unlocked";
+    document.getElementById("canvasHint").textContent = paintingBlocked()
+      ? "positioning overlay — lock to resume painting" : "16×16 px canvas";
+  });
+
+  document.getElementById("overlayReset").addEventListener("click", function () {
+    ov = { x: 0, y: 0, scale: 1 };
+    applyOverlayTransform();
+    document.getElementById("zoomSlider").value = 100;
+    document.getElementById("zoomVal").textContent = "100%";
+  });
+
+  document.getElementById("zoomSlider").addEventListener("input", function (e) {
+    ov.scale = Number(e.target.value) / 100;
+    document.getElementById("zoomVal").textContent = e.target.value + "%";
+    applyOverlayTransform();
+  });
+
+  document.getElementById("opacitySlider").addEventListener("input", function (e) {
+    overlay.style.opacity = Number(e.target.value) / 100;
+    document.getElementById("opacityVal").textContent = e.target.value + "%";
+  });
+
+  overlay.addEventListener("pointerdown", function (e) {
+    if (overlayLocked) return;
+    ovDrag = { startX: e.clientX, startY: e.clientY, ox: ov.x, oy: ov.y };
+    overlay.classList.add("dragging");
+    overlay.setPointerCapture(e.pointerId);
+  });
+  overlay.addEventListener("pointermove", function (e) {
+    if (!ovDrag) return;
+    ov.x = ovDrag.ox + (e.clientX - ovDrag.startX);
+    ov.y = ovDrag.oy + (e.clientY - ovDrag.startY);
+    applyOverlayTransform();
+  });
+  overlay.addEventListener("pointerup", function () {
+    ovDrag = null;
+    overlay.classList.remove("dragging");
+  });
+
+  document.getElementById("gridWrap").addEventListener("wheel", function (e) {
+    if (!overlayVisible || overlayLocked) return;
+    e.preventDefault();
+    var next = ov.scale * (e.deltaY < 0 ? 1.08 : 0.93);
+    ov.scale = Math.min(4, Math.max(0.1, next));
+    applyOverlayTransform();
+    document.getElementById("zoomSlider").value = Math.round(ov.scale * 100);
+    document.getElementById("zoomVal").textContent = Math.round(ov.scale * 100) + "%";
+  }, { passive: false });
+
+  canvas.addEventListener("pointerdown", function (e) {
+    if (paintingBlocked()) return;
+    if (!currentTool) { flashNoToolHint(); return; }
+    isPointerDown = true;
+    canvas.setPointerCapture(e.pointerId);
+    pushHistory(); // one snapshot per stroke/click, not per dragged pixel
+    paintAt(e.clientX, e.clientY);
+  });
+  canvas.addEventListener("pointermove", function (e) {
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+    var x = Math.floor((e.clientX - rect.left) * scaleX / CELL);
+    var y = Math.floor((e.clientY - rect.top) * scaleY / CELL);
+    if (x >= 0 && y >= 0 && x < SIZE && y < SIZE) {
+      document.getElementById("hoverCoord").textContent = "x:" + x + "  y:" + y;
+    }
+    if (isPointerDown && currentTool !== "fill" && !paintingBlocked()) paintAt(e.clientX, e.clientY);
+  });
+  window.addEventListener("pointerup", function () { isPointerDown = false; });
+  canvas.addEventListener("pointerleave", function () {
+    if (!isPointerDown) document.getElementById("hoverCoord").textContent = "—";
+  });
+
+  // --- undo/redo history (max 10 snapshots) ---
+  var HISTORY_LIMIT = 10;
+  var undoStack = [];
+  var redoStack = [];
+  var undoBtn = document.getElementById("undoBtn");
+  var redoBtn = document.getElementById("redoBtn");
+
+  function updateHistoryButtons() {
+    undoBtn.disabled = undoStack.length === 0;
+    redoBtn.disabled = redoStack.length === 0;
+  }
+
+  function pushHistory() {
+    undoStack.push(pixels.slice());
+    if (undoStack.length > HISTORY_LIMIT) undoStack.shift();
+    redoStack.length = 0;
+    updateHistoryButtons();
+  }
+
+  undoBtn.addEventListener("click", function () {
+    if (!undoStack.length) return;
+    redoStack.push(pixels.slice());
+    if (redoStack.length > HISTORY_LIMIT) redoStack.shift();
+    pixels = undoStack.pop();
+    updateHistoryButtons();
+    render();
+  });
+
+  redoBtn.addEventListener("click", function () {
+    if (!redoStack.length) return;
+    undoStack.push(pixels.slice());
+    if (undoStack.length > HISTORY_LIMIT) undoStack.shift();
+    pixels = redoStack.pop();
+    updateHistoryButtons();
+    render();
+  });
+
+  document.getElementById("toolPencil").addEventListener("click", function () { toggleTool("pencil"); this.blur(); });
+  document.getElementById("toolFill").addEventListener("click", function () { toggleTool("fill"); this.blur(); });
+  document.getElementById("toolEraser").addEventListener("click", function () { toggleTool("eraser"); this.blur(); });
+
+  // --- clear: requires a second click within 2.5s to actually clear ---
+  var clearBtn = document.getElementById("clearAll");
+  var clearIcon = clearBtn.querySelector(".btn-icon");
+  var clearLabel = clearBtn.querySelector(".btn-label");
+  var clearArmed = false;
+  var clearTimer = null;
+
+  function disarmClear() {
+    clearArmed = false;
+    clearIcon.textContent = "🗑";
+    clearLabel.textContent = "Clear";
+    clearBtn.title = "Clear canvas";
+    clearBtn.setAttribute("aria-label", "Clear canvas");
+    clearBtn.classList.remove("confirm-armed");
+    if (clearTimer) { clearTimeout(clearTimer); clearTimer = null; }
+  }
+
+  clearBtn.addEventListener("click", function () {
+    if (!clearArmed) {
+      clearArmed = true;
+      clearIcon.textContent = "⚠️";
+      clearLabel.textContent = "Sure?";
+      clearBtn.title = "Click again to confirm clear";
+      clearBtn.setAttribute("aria-label", "Click again to confirm clear");
+      clearBtn.classList.add("confirm-armed");
+      clearTimer = setTimeout(disarmClear, 2500);
+      return;
+    }
+    disarmClear();
+
+    undoStack.length = 0;
+    redoStack.length = 0;
+    updateHistoryButtons();
+    pixels.fill(null);
+    render();
+  });
+
+  // clicking anywhere else while armed resets it — next click on Clear
+  // must show the confirmation again, not silently reuse the armed state
+  document.addEventListener("pointerdown", function (e) {
+    if (clearArmed && e.target !== clearBtn && !clearBtn.contains(e.target)) {
+      disarmClear();
+    }
+  }, true);
+
+  document.getElementById("customColor").addEventListener("input", function (e) {
+    setCurrentColor(e.target.value);
+    if (!currentTool) setTool("pencil");
+  });
+
+  // Artifacts run in a sandboxed frame — a synthetic <a download> click is
+  // silently ignored there. window.claude.downloads.save() is the real path;
+  // fall back to the anchor trick only if that capability isn't present.
+  function offerDownload(filename, blob) {
+    if (window.claude && window.claude.downloads) {
+      window.claude.downloads.save({ filename: filename, data: blob }).catch(function (err) {
+        var code = err && err.code;
+        if (code === "declined") return; // user said no, don't nag
+        alert("Couldn't save " + filename + " (" + (code || "unknown error") + "). Try again.");
+      });
+      return;
+    }
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+
+  document.getElementById("exportBtn").addEventListener("click", function () {
+    var out = document.createElement("canvas");
+    out.width = SIZE; out.height = SIZE;
+    var octx = out.getContext("2d");
+    var img = octx.createImageData(SIZE, SIZE);
+    for (var y = 0; y < SIZE; y++) {
+      for (var x = 0; x < SIZE; x++) {
+        var c = pixels[idx(x, y)];
+        var o = idx(x, y) * 4;
+        if (c) {
+          var rgb = hexToRgb(c);
+          img.data[o] = rgb.r; img.data[o + 1] = rgb.g; img.data[o + 2] = rgb.b; img.data[o + 3] = 255;
+        }
+      }
+    }
+    octx.putImageData(img, 0, 0);
+
+    var name = (document.getElementById("filename").value || "icon").trim().replace(/[^a-z0-9-_]+/gi, "-");
+    out.toBlob(function (blob) {
+      offerDownload(name + ".png", blob);
+    }, "image/png");
+  });
+
+  document.getElementById("saveStateBtn").addEventListener("click", function () {
+    var name = (document.getElementById("filename").value || "icon").trim().replace(/[^a-z0-9-_]+/gi, "-");
+    var state = {
+      format: "yoto-pixel-icon-state",
+      version: 1,
+      size: SIZE,
+      filename: name,
+      pixels: pixels,
+      savedAt: new Date().toISOString()
+    };
+    var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    offerDownload(name + ".state.json", blob);
+  });
+
+  document.getElementById("loadStateBtn").addEventListener("click", function () {
+    document.getElementById("loadStateFile").click();
+  });
+
+  document.getElementById("loadStateFile").addEventListener("change", function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      try {
+        var state = JSON.parse(ev.target.result);
+        if (state.format !== "yoto-pixel-icon-state" || !Array.isArray(state.pixels) || state.pixels.length !== SIZE * SIZE) {
+          alert("This doesn't look like a valid saved icon state.");
+          return;
+        }
+        pushHistory();
+        pixels = state.pixels.slice();
+        if (state.filename) document.getElementById("filename").value = state.filename;
+        render();
+      } catch (err) {
+        alert("Couldn't read that file — is it a .state.json saved from this editor?");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  });
+
+  // --- theme toggle: defaults to the device's prefers-color-scheme; an
+  // explicit choice is remembered locally and overrides it thereafter ---
+  (function () {
+    var root = document.documentElement;
+    var toggle = document.getElementById("themeToggle");
+    var STORAGE_KEY = "pixel-icon-editor-theme";
+
+    function systemPrefersDark() {
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+
+    function applyTheme(mode) {
+      // mode: "dark" | "light" | null (null = follow system)
+      if (mode) root.setAttribute("data-theme", mode);
+      else root.removeAttribute("data-theme");
+      var isDark = mode ? mode === "dark" : systemPrefersDark();
+      toggle.textContent = isDark ? "☀️" : "🌙";
+      toggle.title = isDark ? "Switch to light" : "Switch to dark";
+    }
+
+    var saved = null;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { /* storage unavailable */ }
+    applyTheme(saved);
+
+    toggle.addEventListener("click", function () {
+      var isDark = root.getAttribute("data-theme")
+        ? root.getAttribute("data-theme") === "dark"
+        : systemPrefersDark();
+      var next = isDark ? "light" : "dark";
+      applyTheme(next);
+      try { localStorage.setItem(STORAGE_KEY, next); } catch (e) { /* storage unavailable */ }
+    });
+  })();
+
+  function wireTogglePanel(btnId, panelId, otherBtnId, otherPanelId) {
+    document.getElementById(btnId).addEventListener("click", function () {
+      var panel = document.getElementById(panelId);
+      var open = panel.hasAttribute("hidden");
+      if (open) panel.removeAttribute("hidden"); else panel.setAttribute("hidden", "");
+      this.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) {
+        document.getElementById(otherPanelId).setAttribute("hidden", "");
+        document.getElementById(otherBtnId).setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+  wireTogglePanel("helpBtn", "helpPanel", "changelogBtn", "changelogPanel");
+  wireTogglePanel("changelogBtn", "changelogPanel", "helpBtn", "helpPanel");
+
+  // hidden critter footer: dance while it's actually on screen
+  (function () {
+    var footer = document.querySelector(".critter-footer");
+    if (!footer || !("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        footer.classList.toggle("dancing", entry.isIntersecting);
+      });
+    }, { threshold: 0.4 });
+    io.observe(footer);
+  })();
+
+  // shrink the sticky header once the page has scrolled a bit
+  (function () {
+    var header = document.querySelector("header");
+    var COMPACT_AT = 24;
+    var ticking = false;
+    function updateCompact() {
+      header.classList.toggle("compact", window.scrollY > COMPACT_AT);
+      ticking = false;
+    }
+    window.addEventListener("scroll", function () {
+      if (!ticking) { requestAnimationFrame(updateCompact); ticking = true; }
+    }, { passive: true });
+    updateCompact();
+  })();
+
+  document.getElementById("scrollToolsBtn").addEventListener("click", function () {
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.getElementById("exportPanel").scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start"
+    });
+  });
+
+  var restoredFromSession = false;
+  try {
+    var savedSession = localStorage.getItem(SESSION_KEY);
+    if (savedSession) {
+      var sess = JSON.parse(savedSession);
+      if (sess && sess.size === SIZE && Array.isArray(sess.pixels) && sess.pixels.length === SIZE * SIZE) {
+        pixels = sess.pixels.slice();
+        if (sess.filename) document.getElementById("filename").value = sess.filename;
+        // only worth announcing if there's actually something to restore
+        restoredFromSession = sess.pixels.some(function (c) { return c !== null; });
+      }
+    }
+  } catch (e) { /* corrupt/unavailable storage — just start blank */ }
+
+  buildPalette();
+  setCurrentColor(currentColor);
+  updateHistoryButtons();
+  render();
+
+  if (restoredFromSession) showSessionToast();
+
+  new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
