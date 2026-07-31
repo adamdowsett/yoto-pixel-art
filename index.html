@@ -538,6 +538,74 @@
   }
   .overlay-hint.show { display: block; }
 
+  .overlay-lock-fab {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 5;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: 0 8px 22px -8px rgb(0 0 0 / 0.5);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .overlay-lock-fab:hover { filter: brightness(1.06); }
+  .overlay-lock-fab[hidden] { display: none; }
+
+  .overlay-zoom-fab {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 5;
+    display: flex;
+    gap: 6px;
+  }
+  .overlay-zoom-fab[hidden] { display: none; }
+  .overlay-zoom-fab button {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    color: var(--text);
+    border: 1px solid var(--border);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 4px 12px -6px rgb(0 0 0 / 0.4);
+  }
+
+  .overlay-opacity-fab {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 14px;
+    box-shadow: 0 4px 12px -6px rgb(0 0 0 / 0.4);
+  }
+  .overlay-opacity-fab[hidden] { display: none; }
+  .overlay-opacity-fab .op-label {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .overlay-opacity-fab input[type="range"] { width: 120px; }
+
   .no-tool-hint {
     position: absolute;
     top: 50%;
@@ -927,7 +995,7 @@
       </div>
       <div class="header-actions">
         <button type="button" id="themeToggle" class="help-btn" title="Toggle light/dark" aria-label="Toggle light/dark theme">◐</button>
-        <button type="button" id="changelogBtn" class="help-btn version-badge" aria-expanded="false" aria-controls="changelogPanel" title="What's new">v1.13</button>
+        <button type="button" id="changelogBtn" class="help-btn version-badge" aria-expanded="false" aria-controls="changelogPanel" title="What's new">v1.14</button>
         <button type="button" id="helpBtn" class="help-btn" aria-expanded="false" aria-controls="helpPanel" title="How this works">?</button>
       </div>
     </div>
@@ -939,6 +1007,7 @@
     <div class="help-panel" id="changelogPanel" hidden>
       <h2 class="changelog-title">Changelog</h2>
       <ul class="changelog-list">
+        <li><span class="v">v1.14</span> Trace overlay: two-finger pinch-to-zoom on mobile, on-canvas zoom +/− buttons while positioning, prominent "Lock overlay" button when done, and a floating opacity slider once locked.</li>
         <li><span class="v">v1.13</span> Removed the technical footer text. Header subtitle removed, sticky header shrinks on scroll, layout tightened to fit one screen on load.</li>
         <li><span class="v">v1.12</span> Auto-saves to this browser as you draw; a refresh silently restores it with a dismissible "Session restored" toast.</li>
         <li><span class="v">v1.11</span> Eraser icon redrawn as a pencil-top eraser instead of a sponge.</li>
@@ -970,7 +1039,16 @@
       <div id="gridWrap">
         <canvas id="grid" width="480" height="480" aria-label="16 by 16 pixel drawing grid"></canvas>
         <img id="overlayImg" alt="Reference image to trace">
-        <div class="overlay-hint" id="overlayHint">drag to position · scroll to zoom</div>
+        <div class="overlay-hint" id="overlayHint">drag or pinch to position · tap Lock when done</div>
+        <div class="overlay-zoom-fab" id="zoomOverlayFloating" hidden>
+          <button type="button" id="zoomOutBtn" aria-label="Zoom out">−</button>
+          <button type="button" id="zoomInBtn" aria-label="Zoom in">+</button>
+        </div>
+        <button type="button" id="lockOverlayFloating" class="overlay-lock-fab" hidden>🔒 Lock overlay</button>
+        <div class="overlay-opacity-fab" id="opacityOverlayFloating" hidden>
+          <span class="op-label">Opacity</span>
+          <input type="range" id="opacityFabSlider" min="5" max="100" value="50" aria-label="Overlay opacity">
+        </div>
         <div class="no-tool-hint" id="noToolHint">👆 Try clicking the <strong>Pencil</strong> tool</div>
         <div class="session-toast" id="sessionToast">✓ Session restored</div>
       </div>
@@ -1403,6 +1481,38 @@
     return overlayVisible && !overlayLocked;
   }
 
+  function refreshLockFab() {
+    var lockFab = document.getElementById("lockOverlayFloating");
+    var zoomFab = document.getElementById("zoomOverlayFloating");
+    var opFab = document.getElementById("opacityOverlayFloating");
+    var positioning = paintingBlocked();          // overlay visible AND unlocked
+    var lockedAndVisible = overlayVisible && overlayLocked;
+    lockFab.toggleAttribute("hidden", !positioning);
+    zoomFab.toggleAttribute("hidden", !positioning);
+    opFab.toggleAttribute("hidden", !lockedAndVisible);
+  }
+
+  document.getElementById("lockOverlayFloating").addEventListener("click", function () {
+    document.getElementById("overlayToggleLock").click();
+  });
+
+  function nudgeZoom(factor) {
+    ov.scale = Math.min(4, Math.max(0.1, ov.scale * factor));
+    applyOverlayTransform();
+    syncZoomUI();
+  }
+  document.getElementById("zoomInBtn").addEventListener("click", function () { nudgeZoom(1.15); });
+  document.getElementById("zoomOutBtn").addEventListener("click", function () { nudgeZoom(1 / 1.15); });
+
+  document.getElementById("opacityFabSlider").addEventListener("input", function (e) {
+    overlay.style.opacity = Number(e.target.value) / 100;
+    var side = document.getElementById("opacitySlider");
+    if (side) {
+      side.value = e.target.value;
+      document.getElementById("opacityVal").textContent = e.target.value + "%";
+    }
+  });
+
   function applyOverlayTransform() {
     overlay.style.transform =
       "translate(-50%, -50%) translate(" + ov.x + "px, " + ov.y + "px) scale(" + ov.scale + ")";
@@ -1430,6 +1540,7 @@
       document.getElementById("overlayToggleShow").textContent = "👁 Hide";
       document.getElementById("overlayToggleLock").textContent = "🔓 Unlocked";
       document.getElementById("canvasHint").textContent = "positioning overlay — lock to resume painting";
+      refreshLockFab();
     };
     reader.readAsDataURL(file);
   });
@@ -1441,6 +1552,7 @@
     this.textContent = overlayVisible ? "👁 Hide" : "🚫 Show";
     document.getElementById("canvasHint").textContent = paintingBlocked()
       ? "positioning overlay — lock to resume painting" : "16×16 px canvas";
+    refreshLockFab();
   });
 
   document.getElementById("overlayToggleLock").addEventListener("click", function () {
@@ -1450,6 +1562,7 @@
     this.textContent = overlayLocked ? "🔒 Locked" : "🔓 Unlocked";
     document.getElementById("canvasHint").textContent = paintingBlocked()
       ? "positioning overlay — lock to resume painting" : "16×16 px canvas";
+    refreshLockFab();
   });
 
   document.getElementById("overlayReset").addEventListener("click", function () {
@@ -1468,24 +1581,88 @@
   document.getElementById("opacitySlider").addEventListener("input", function (e) {
     overlay.style.opacity = Number(e.target.value) / 100;
     document.getElementById("opacityVal").textContent = e.target.value + "%";
+    document.getElementById("opacityFabSlider").value = e.target.value;
   });
+
+  // multi-pointer overlay input:
+  //   1 finger / mouse drag  -> pan
+  //   2 fingers               -> pinch zoom + pan (average of both pointers)
+  var activePointers = new Map(); // pointerId -> {x, y}
+  var pinchState = null;          // { startDist, startScale, startX, startY, startOx, startOy }
+
+  function pointerMid() {
+    var pts = Array.from(activePointers.values());
+    var sx = 0, sy = 0;
+    pts.forEach(function (p) { sx += p.x; sy += p.y; });
+    return { x: sx / pts.length, y: sy / pts.length };
+  }
+  function pointerDist() {
+    var pts = Array.from(activePointers.values());
+    var dx = pts[0].x - pts[1].x, dy = pts[0].y - pts[1].y;
+    return Math.hypot(dx, dy) || 1;
+  }
+  function syncZoomUI() {
+    document.getElementById("zoomSlider").value = Math.round(ov.scale * 100);
+    document.getElementById("zoomVal").textContent = Math.round(ov.scale * 100) + "%";
+  }
 
   overlay.addEventListener("pointerdown", function (e) {
     if (overlayLocked) return;
-    ovDrag = { startX: e.clientX, startY: e.clientY, ox: ov.x, oy: ov.y };
-    overlay.classList.add("dragging");
+    activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     overlay.setPointerCapture(e.pointerId);
+
+    if (activePointers.size === 1) {
+      ovDrag = { startX: e.clientX, startY: e.clientY, ox: ov.x, oy: ov.y };
+      overlay.classList.add("dragging");
+    } else if (activePointers.size === 2) {
+      // entering pinch — freeze single-finger drag, capture the two-pointer baseline
+      ovDrag = null;
+      var mid = pointerMid();
+      pinchState = {
+        startDist: pointerDist(),
+        startScale: ov.scale,
+        startMidX: mid.x,
+        startMidY: mid.y,
+        startOx: ov.x,
+        startOy: ov.y
+      };
+    }
   });
+
   overlay.addEventListener("pointermove", function (e) {
-    if (!ovDrag) return;
-    ov.x = ovDrag.ox + (e.clientX - ovDrag.startX);
-    ov.y = ovDrag.oy + (e.clientY - ovDrag.startY);
-    applyOverlayTransform();
+    if (!activePointers.has(e.pointerId)) return;
+    activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    if (pinchState && activePointers.size >= 2) {
+      var newDist = pointerDist();
+      var newMid = pointerMid();
+      var scale = pinchState.startScale * (newDist / pinchState.startDist);
+      ov.scale = Math.min(4, Math.max(0.1, scale));
+      // pan by how far the fingers' midpoint has moved since pinch started
+      ov.x = pinchState.startOx + (newMid.x - pinchState.startMidX);
+      ov.y = pinchState.startOy + (newMid.y - pinchState.startMidY);
+      applyOverlayTransform();
+      syncZoomUI();
+      return;
+    }
+
+    if (ovDrag && activePointers.size === 1) {
+      ov.x = ovDrag.ox + (e.clientX - ovDrag.startX);
+      ov.y = ovDrag.oy + (e.clientY - ovDrag.startY);
+      applyOverlayTransform();
+    }
   });
-  overlay.addEventListener("pointerup", function () {
-    ovDrag = null;
-    overlay.classList.remove("dragging");
-  });
+
+  function endOverlayPointer(e) {
+    activePointers.delete(e.pointerId);
+    if (activePointers.size < 2) pinchState = null;
+    if (activePointers.size === 0) {
+      ovDrag = null;
+      overlay.classList.remove("dragging");
+    }
+  }
+  overlay.addEventListener("pointerup", endOverlayPointer);
+  overlay.addEventListener("pointercancel", endOverlayPointer);
 
   document.getElementById("gridWrap").addEventListener("wheel", function (e) {
     if (!overlayVisible || overlayLocked) return;
@@ -1493,8 +1670,7 @@
     var next = ov.scale * (e.deltaY < 0 ? 1.08 : 0.93);
     ov.scale = Math.min(4, Math.max(0.1, next));
     applyOverlayTransform();
-    document.getElementById("zoomSlider").value = Math.round(ov.scale * 100);
-    document.getElementById("zoomVal").textContent = Math.round(ov.scale * 100) + "%";
+    syncZoomUI();
   }, { passive: false });
 
   canvas.addEventListener("pointerdown", function (e) {
