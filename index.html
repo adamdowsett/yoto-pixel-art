@@ -995,7 +995,7 @@
       </div>
       <div class="header-actions">
         <button type="button" id="themeToggle" class="help-btn" title="Toggle light/dark" aria-label="Toggle light/dark theme">◐</button>
-        <button type="button" id="changelogBtn" class="help-btn version-badge" aria-expanded="false" aria-controls="changelogPanel" title="What's new">v1.14</button>
+        <button type="button" id="changelogBtn" class="help-btn version-badge" aria-expanded="false" aria-controls="changelogPanel" title="What's new">v1.15</button>
         <button type="button" id="helpBtn" class="help-btn" aria-expanded="false" aria-controls="helpPanel" title="How this works">?</button>
       </div>
     </div>
@@ -1007,6 +1007,7 @@
     <div class="help-panel" id="changelogPanel" hidden>
       <h2 class="changelog-title">Changelog</h2>
       <ul class="changelog-list">
+        <li><span class="v">v1.15</span> Removed pure black from the palette — Yoto's screen doesn't render it, so keeping it in was misleading.</li>
         <li><span class="v">v1.14</span> Trace overlay: two-finger pinch-to-zoom on mobile, on-canvas zoom +/− buttons while positioning, prominent "Lock overlay" button when done, and a floating opacity slider once locked.</li>
         <li><span class="v">v1.13</span> Removed the technical footer text. Header subtitle removed, sticky header shrinks on scroll, layout tightened to fit one screen on load.</li>
         <li><span class="v">v1.12</span> Auto-saves to this browser as you draw; a refresh silently restores it with a dismissible "Session restored" toast.</li>
@@ -1156,20 +1157,17 @@
   var SIZE = 16;
   var CELL = 480 / SIZE; // 30px on-screen per pixel
 
+  // No pure black — the Yoto player's screen doesn't render #000000 (Yoto's
+  // own MYO icon guidance says to avoid it). Removed from the palette rather
+  // than kept-with-a-warning: too easy to pick unintentionally.
   var PALETTE = [
-    "#000000", "#3a3f4b", "#8891a0", "#ffffff",
+    "#3a3f4b", "#8891a0", "#c9ced8", "#ffffff",
     "#ff6b4a", "#e8563a", "#ffb703", "#ffe066",
     "#63d2ff", "#0080a8", "#1b6fb8", "#0b3d66",
     "#3ddc97", "#1f9c6b", "#0c5c3f", "#8bd450",
     "#c77dff", "#7b2cbf", "#ff5d8f", "#c9184a",
     "#a6774e", "#5c3a21", "#f2e5d0", "#d9d2c5"
   ];
-
-  // Pure black (#000000) doesn't render on the Yoto player's screen — Yoto's
-  // own icon guidance says to avoid it (some MYO icon-makers exploit this
-  // deliberately for "floating" negative-space icons, so it stays in the
-  // full palette, just flagged and left out of the quick tray/defaults).
-  var YOTO_INVISIBLE_BLACK = "#000000";
 
   // Curated, high-contrast quick-access set for the mobile tray — always
   // includes white, deliberately excludes pure black.
@@ -1212,7 +1210,7 @@
       b.className = "swatch";
       b.style.background = hex;
       b.dataset.hex = hex;
-      b.title = (hex === YOTO_INVISIBLE_BLACK) ? hex + " — invisible on the Yoto screen" : hex;
+      b.title = hex;
       b.addEventListener("click", function () {
         setCurrentColor(hex);
         if (!currentTool) setTool("pencil"); // only default to pencil if nothing's selected — don't steal Fill/Eraser
